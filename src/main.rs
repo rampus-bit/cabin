@@ -21,7 +21,7 @@ fn main() {
     // Flush stdout (i.e. make the output appear).
     stdout.flush().unwrap();
 
-    for c in stdin.keys() {
+        for c in stdin.keys() {
         // Clear the current line.
         write!(stdout, "{}{}", termion::cursor::Goto(1, 1), termion::clear::CurrentLine).unwrap();
 
@@ -29,9 +29,6 @@ fn main() {
         match c.unwrap() {
             // Exit.
             Key::Char('q') => break,
-            Key::Char(c)   => println!("{}", c),
-            Key::Alt(c)    => println!("Alt-{}", c),
-            Key::Ctrl(c)   => println!("Ctrl-{}", c),
             Key::Left      => println!("<left>"),
             Key::Right     => println!("<right>"),
             Key::Up        => println!("<up>"),
