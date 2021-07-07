@@ -1,19 +1,40 @@
-use youchoose;
+extern crate termion;
 
-fn main(){
-    let mut menu = youchoose::Menu::new(0..100)
-    .preview(multiples);
-    let choice = menu.show();
-    println!("Chose {:?}", choice);
+use std::io;
+use termion::raw::IntoRawMode;
+use termion::screen::AlternateScreen;
+use tui::widgets::{Widget, Block, Borders};
+use tui::{backend::TermionBackend, Terminal};
+use tui::layout::{Layout, Constraint, Direction};
 
-}
+fn main() -> Result<(), io::Error> {
+    let stdout = io::stdout().into_raw_mode()?;
+    let stdout = AlternateScreen::from(stdout);
+    let backend = TermionBackend::new(stdout);
+    let mut terminal = Terminal::new(backend)?;
 
-fn multiples(num: i32) -> String {
-    let mut buffer = String::new();
-    for i in 0..20 {
-        buffer.push_str(
-            &format!("{} times {} is equal to {}!\n", num, i, num * i)
-        );
+    loop {
+        terminal.draw(|f| {
+            let chunks = Layout::default()
+                .direction(Direction::Vertical)
+                .margin(1)
+                .constraints(
+                    [
+                        Constraint::Percentage(10),
+                        Constraint::Percentage(80),
+                        Constraint::Percentage(10)
+                    ].as_ref()
+                )
+                .split(f.size());
+            let block = Block::default()
+                .title("Block")
+                .borders(Borders::ALL);
+            f.render_widget(block, chunks[0]);
+            let block = Block::default()
+                .title("Block 2")
+                .borders(Borders::ALL);
+            f.render_widget(block, chunks[1]);
+        })?;
     }
-    buffer
+    Ok(())
 }
