@@ -1,7 +1,10 @@
 extern crate termion;
 
+mod ui;
+
 use std::io;
 use termion::raw::IntoRawMode;
+use termion::{event::Key};
 use termion::screen::AlternateScreen;
 use tui::widgets::{Widget, Block, Borders};
 use tui::{backend::TermionBackend, Terminal};
@@ -30,6 +33,7 @@ fn main() -> Result<(), io::Error> {
                 .title("Block")
                 .borders(Borders::ALL);
             f.render_widget(block, chunks[0]);
+
             let block = Block::default()
                 .title("Block 2")
                 .borders(Borders::ALL);
