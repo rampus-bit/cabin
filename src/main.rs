@@ -1,8 +1,12 @@
 extern crate termion;
 
 mod ui;
+mod util;
+
+use crate::util::{Event, Events};
 
 use std::io;
+use termion::event::Key;
 use termion::raw::IntoRawMode;
 use termion::screen::AlternateScreen;
 use tui::widgets::{Block, Borders, Paragraph};
@@ -16,6 +20,8 @@ fn main() -> Result<(), io::Error> {
     let stdout = AlternateScreen::from(stdout);
     let backend = TermionBackend::new(stdout);
     let mut terminal = Terminal::new(backend)?;
+
+    let events = Events::new();
 
     loop {
         terminal.draw(|f| {
@@ -64,5 +70,11 @@ fn main() -> Result<(), io::Error> {
                 .borders(Borders::ALL);
             f.render_widget(block, chunks[1]);
         })?;
+
+        if let Event::Input(key) = events.next()? {
+            if key == Key::Char('q') {
+                break;
+            }
+        }
     }
 }
