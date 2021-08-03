@@ -1,11 +1,12 @@
+#[allow(dead_code)]
 extern crate termion;
 
-mod ui;
 mod util;
 
 use crate::util::{Event, Events};
 
 use std::io;
+use std::error::Error;
 use termion::event::Key;
 use termion::raw::IntoRawMode;
 use termion::screen::AlternateScreen;
@@ -15,7 +16,7 @@ use tui::layout::{Alignment, Layout, Constraint, Direction};
 use tui::style::{Color, Modifier, Style};
 use tui::text::{Span, Spans};
 
-fn main() -> Result<(), io::Error> {
+fn main() -> Result<(), Box<dyn Error>> {
     let stdout = io::stdout().into_raw_mode()?;
     let stdout = AlternateScreen::from(stdout);
     let backend = TermionBackend::new(stdout);
@@ -71,7 +72,7 @@ fn main() -> Result<(), io::Error> {
             f.render_widget(block, chunks[1]);
         })?;
 
-        if let Event::Input(key) = events.next()? {
+        if let Event::Input(key) = events.next() {
             if key == Key::Char('q') {
                 break;
             }
